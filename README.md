@@ -40,7 +40,7 @@ We're **thrilled to welcome contributors** at this exciting stage! Whether you'r
 - 📖 **Improve Documentation** - Help make our docs clearer and more comprehensive
 - 🧪 **Test & Feedback** - Try the platform and share your experience
 
-> **Join us in building the future of workflow intelligence!** Every contribution, no matter how small, helps shape WorkflowIQ into a powerful tool for organizations worldwide.
+> **Join us in building the future of workflow intelligence!** Every contribution, no matter how small, helps shape WorkflowIQ into a powerful tool for organizations worldwide. read our [Contributing Guidelines](CONTRIBUTING.md) to know more.
 
 
 ## 📋 Table of Contents
@@ -376,7 +376,7 @@ We welcome contributions from the community! Please read our [Contributing Guide
 
 ### Development Guidelines
 
-- Follow our [Code Style Guide](CONTRIBUTING.md)
+- Follow our [Coding Standards](CONTRIBUTING.md#-coding-standards)
 - Write tests for new features
 - Update documentation when needed
 - Follow conventional commit messages
