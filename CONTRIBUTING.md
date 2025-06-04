@@ -113,13 +113,13 @@ Before you begin, ensure you have:
 
 2. **Clone your fork**
    ```bash
-   git clone https://github.com/yourusername/workflowiq.git
+   git clone https://github.com/Chun-Huan-Lee/workflowiq.git
    cd workflowiq
    ```
 
 3. **Add upstream remote**
    ```bash
-   git remote add upstream https://github.com/yourusername/workflowiq.git
+   git remote add upstream https://github.com/Chun-Huan-Lee/workflowiq.git
    ```
 
 4. **Install dependencies**
