@@ -3,7 +3,7 @@
 
 <div align="center">
 
-<img src="/docs/img/project-banner.png" alt="Project Banner" width="100%"  style="object-fit: cover; border-radius: 10px;" />
+<img src="/docs/img/project-banner2.png" alt="Project Banner" width="100%"  style="object-fit: cover; border-radius: 10px;" />
 
 **Turn complex business processes into clear, optimized workflows through the power of AI and collaboration.**
 
