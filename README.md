@@ -1,3 +1,6 @@
+> [!CAUTION]
+This project is in an early stage of development. Some features may be incomplete or not functioning as intended.
+
 # WorkflowIQ
 ### AI-Powered Business Process Intelligence Platform
 
