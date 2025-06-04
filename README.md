@@ -1,6 +1,6 @@
 <div align="center">
 
-### 🌍 Choose Your Language / 選擇語言
+### 🌍 Choose Your Language / 選擇語言 / 选择语言
 
 [![English](https://img.shields.io/badge/Language-English-blue?style=for-the-badge)](README.md)
 [![繁體中文](https://img.shields.io/badge/Language-繁體中文-red?style=for-the-badge)](README-zh-TW.md)
