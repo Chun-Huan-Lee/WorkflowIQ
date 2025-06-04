@@ -3,7 +3,9 @@
 
 <div align="center">
 
-<img src="/docs/img/demo-screen.png" alt="Project Banner" width="100%"  style="object-fit: cover; border-radius: 10px;" />
+<img src="/docs/img/project-banner.png" alt="Project Banner" width="100%"  style="object-fit: cover; border-radius: 10px;" />
+
+**Turn complex business processes into clear, optimized workflows through the power of AI and collaboration.**
 
 [🚀 Quick Start](#-quick-start) · [📖 Documentation](#-documentation) · [🎯 Demo](#-demo) · [💬 Community](#-community)
 
@@ -11,8 +13,6 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)](LICENSE)
 [![Node Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen?style=for-the-badge&logo=node.js)](https://nodejs.org/)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/Chun-Huan-Lee/workflowiq/ci.yml?style=for-the-badge&logo=github-actions)](https://github.com/Chun-Huan-Lee/workflowiq/actions)
-
-**Turn complex business processes into clear, optimized workflows through the power of AI and collaboration.**
 
 </div>
 
