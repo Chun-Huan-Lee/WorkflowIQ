@@ -14,6 +14,7 @@
 > [!CAUTION]
 此项目目前处于早期开发阶段。某些功能可能尚未完成或无法正常运作。
 
+# WorkflowIQ
 ### AI 驱动的商业流程智能平台
 
 <div align="center">
