@@ -1,0 +1,70 @@
+{
+  "name": "workflowiq",
+  "version": "1.0.0",
+  "description": "AI-Powered Business Process Intelligence Platform",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend",
+    "shared"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\" \"npm run dev:ai\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:ai": "cd ai-services && python -m uvicorn main:app --reload --port 8001",
+    "build": "npm run build:shared && npm run build:backend && npm run build:frontend",
+    "build:shared": "cd shared && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "test": "npm run test:shared && npm run test:backend && npm run test:frontend",
+    "test:shared": "cd shared && npm run test",
+    "test:backend": "cd backend && npm run test",
+    "test:frontend": "cd frontend && npm run test",
+    "test:ai": "cd ai-services && python -m pytest",
+    "lint": "npm run lint:backend && npm run lint:frontend",
+    "lint:backend": "cd backend && npm run lint",
+    "lint:frontend": "cd frontend && npm run lint",
+    "docker:dev": "docker-compose up -d",
+    "docker:build": "docker-compose build",
+    "docker:down": "docker-compose down",
+    "db:migrate": "cd backend && npx prisma migrate dev",
+    "db:seed": "cd backend && npx prisma db seed",
+    "db:studio": "cd backend && npx prisma studio",
+    "deploy:aws": "npm run build && npm run deploy:infrastructure && npm run deploy:services",
+    "deploy:infrastructure": "cd infrastructure && terraform apply",
+    "deploy:services": "npm run deploy:backend && npm run deploy:frontend",
+    "deploy:backend": "cd backend && npm run deploy",
+    "deploy:frontend": "cd frontend && vercel --prod",
+    "clean": "rm -rf node_modules && rm -rf frontend/node_modules && rm -rf backend/node_modules && rm -rf shared/node_modules",
+    "postinstall": "npm run build:shared"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.57.0",
+    "typescript": "^5.3.3",
+    "prettier": "^3.2.5"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/workflowiq.git"
+  },
+  "keywords": [
+    "workflow",
+    "process-management",
+    "ai",
+    "business-intelligence",
+    "collaboration",
+    "automation",
+    "data-visualization",
+    "real-time"
+  ],
+  "author": "Your Name <your.email@example.com>",
+  "license": "MIT"
+} 

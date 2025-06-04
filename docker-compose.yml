@@ -1,0 +1,152 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: workflowiq-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: workflowiq
+      POSTGRES_USER: workflowiq
+      POSTGRES_PASSWORD: workflowiq_dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/prisma/seed.sql:/docker-entrypoint-initdb.d/seed.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U workflowiq"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis for caching and real-time sessions
+  redis:
+    image: redis:7-alpine
+    container_name: workflowiq-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: workflowiq-backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://workflowiq:workflowiq_dev_password@postgres:5432/workflowiq
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: your-super-secret-jwt-key-for-development
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      CORS_ORIGIN: http://localhost:3000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # AI Services (Python FastAPI)
+  ai-services:
+    build:
+      context: ./ai-services
+      dockerfile: Dockerfile.dev
+    container_name: workflowiq-ai
+    restart: unless-stopped
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      PINECONE_API_KEY: ${PINECONE_API_KEY}
+      PINECONE_ENVIRONMENT: ${PINECONE_ENVIRONMENT}
+      DATABASE_URL: postgresql://workflowiq:workflowiq_dev_password@postgres:5432/workflowiq
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./ai-services:/app
+      - ai_models:/app/models
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Frontend (Next.js) - Only for production builds
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: workflowiq-frontend
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+      NEXT_PUBLIC_WS_URL: ws://localhost:8000
+      NEXT_PUBLIC_AI_API_URL: http://localhost:8001
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      backend:
+        condition: service_healthy
+    profiles:
+      - frontend-docker # Only start if specifically requested
+
+  # Development tools
+  adminer:
+    image: adminer:4-standalone
+    container_name: workflowiq-adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    profiles:
+      - tools
+
+  # Redis Insight for Redis management
+  redis-insight:
+    image: redislabs/redisinsight:latest
+    container_name: workflowiq-redis-insight
+    restart: unless-stopped
+    ports:
+      - "8082:8001"
+    depends_on:
+      - redis
+    profiles:
+      - tools
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  ai_models:
+    driver: local
+
+networks:
+  default:
+    name: workflowiq-network 
