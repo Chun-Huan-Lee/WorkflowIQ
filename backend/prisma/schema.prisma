@@ -1,0 +1,469 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Organization and User Management
+model Organization {
+  id       String @id @default(cuid())
+  name     String
+  domain   String?
+  plan     OrganizationPlan @default(FREE)
+  settings Json             @default("{}")
+  limits   Json             @default("{}")
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  users            User[]
+  workflows        Workflow[]
+  processes        BusinessProcess[]
+  dashboards       Dashboard[]
+  apiKeys          ApiKey[]
+  collaborationSessions CollaborationSession[]
+  
+  @@map("organizations")
+}
+
+model User {
+  id             String     @id @default(cuid())
+  email          String     @unique
+  passwordHash   String
+  firstName      String
+  lastName       String
+  role           UserRole   @default(VIEWER)
+  status         UserStatus @default(ACTIVE)
+  avatar         String?
+  bio            String?
+  timezone       String     @default("UTC")
+  preferences    Json       @default("{}")
+  lastLoginAt    DateTime?
+  
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  createdWorkflows     Workflow[]        @relation("WorkflowCreator")
+  createdProcesses     BusinessProcess[] @relation("ProcessCreator")
+  createdDashboards    Dashboard[]       @relation("DashboardCreator")
+  workflowExecutions   WorkflowExecution[]
+  collaboratorSessions Collaborator[]
+  comments             Comment[]
+  aiTasks              AITask[]
+  createdApiKeys       ApiKey[]
+  
+  @@map("users")
+}
+
+// Workflow Management
+model Workflow {
+  id          String          @id @default(cuid())
+  name        String
+  description String?
+  status      WorkflowStatus  @default(DRAFT)
+  version     Int             @default(1)
+  nodes       Json            @default("[]")
+  connections Json            @default("[]")
+  metadata    Json            @default("{}")
+  permissions Json            @default("{}")
+  publishedAt DateTime?
+  
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  createdBy String
+  creator   User   @relation("WorkflowCreator", fields: [createdBy], references: [id])
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  executions            WorkflowExecution[]
+  collaborationSessions CollaborationSession[]
+  comments              Comment[]
+  shareLinks            ShareLink[]
+  
+  @@map("workflows")
+}
+
+model WorkflowExecution {
+  id          String          @id @default(cuid())
+  status      ExecutionStatus @default(PENDING)
+  currentNode String?
+  data        Json            @default("{}")
+  logs        Json            @default("[]")
+  startedAt   DateTime        @default(now())
+  completedAt DateTime?
+  error       String?
+  
+  workflowId String
+  workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  
+  initiatedBy String
+  initiator   User   @relation(fields: [initiatedBy], references: [id])
+  
+  @@map("workflow_executions")
+}
+
+// Business Process Management
+model BusinessProcess {
+  id          String            @id @default(cuid())
+  name        String
+  description String?
+  department  String?
+  category    String?
+  status      ProcessStatus     @default(DISCOVERED)
+  complexity  ProcessComplexity @default(MEDIUM)
+  steps       Json              @default("[]")
+  metrics     Json?
+  stakeholders Json             @default("[]")
+  documents   Json              @default("[]")
+  tags        String[]
+  aiInsights  Json?
+  
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  createdBy String
+  creator   User   @relation("ProcessCreator", fields: [createdBy], references: [id])
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  miningResults         ProcessMiningResult[]
+  collaborationSessions CollaborationSession[]
+  comments              Comment[]
+  shareLinks            ShareLink[]
+  
+  @@map("business_processes")
+}
+
+model ProcessMiningResult {
+  id                String @id @default(cuid())
+  configId          String
+  discoveredProcesses Json   @default("[]")
+  insights          Json   @default("{}")
+  
+  processId String?
+  process   BusinessProcess? @relation(fields: [processId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  
+  @@map("process_mining_results")
+}
+
+// Analytics and Dashboards
+model Dashboard {
+  id              String  @id @default(cuid())
+  name            String
+  description     String?
+  widgets         Json    @default("[]")
+  filters         Json    @default("{}")
+  isPublic        Boolean @default(false)
+  sharedWith      String[]
+  refreshInterval Int     @default(300)
+  
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  createdBy String
+  creator   User   @relation("DashboardCreator", fields: [createdBy], references: [id])
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  collaborationSessions CollaborationSession[]
+  shareLinks            ShareLink[]
+  
+  @@map("dashboards")
+}
+
+// Real-time Collaboration
+model CollaborationSession {
+  id           String   @id @default(cuid())
+  resourceId   String
+  resourceType ResourceType
+  lastActivity DateTime @default(now())
+  
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  
+  // Relations
+  collaborators Collaborator[]
+  comments      Comment[]
+  
+  // Resource relations (polymorphic)
+  workflow        Workflow?        @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  process         BusinessProcess? @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  dashboard       Dashboard?       @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  
+  @@map("collaboration_sessions")
+}
+
+model Collaborator {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  color        String
+  cursor       Json?
+  lastActivity DateTime @default(now())
+  permissions  Json     @default("{}")
+  
+  sessionId String
+  session   CollaborationSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, sessionId])
+  @@map("collaborators")
+}
+
+model Comment {
+  id         String      @id @default(cuid())
+  content    String
+  targetId   String
+  targetType ResourceType
+  position   Json?
+  thread     Json        @default("[]")
+  resolved   Boolean     @default(false)
+  resolvedBy String?
+  resolvedAt DateTime?
+  
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  
+  sessionId String
+  session   CollaborationSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Resource relations (polymorphic)
+  workflow  Workflow?        @relation(fields: [targetId], references: [id], onDelete: Cascade)
+  process   BusinessProcess? @relation(fields: [targetId], references: [id], onDelete: Cascade)
+  
+  @@map("comments")
+}
+
+model ShareLink {
+  id           String   @id @default(cuid())
+  token        String   @unique
+  config       Json
+  views        Int      @default(0)
+  lastAccessed DateTime?
+  
+  createdBy String
+  creator   User   @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  
+  // Resource relations (polymorphic) - using JSON config to store resourceId and type
+  workflow  Workflow?        @relation(fields: [id], references: [id])
+  process   BusinessProcess? @relation(fields: [id], references: [id])
+  dashboard Dashboard?       @relation(fields: [id], references: [id])
+  
+  @@map("share_links")
+}
+
+// AI and Machine Learning
+model AIPrompt {
+  id          String     @id @default(cuid())
+  name        String
+  description String?
+  template    String
+  variables   Json       @default("[]")
+  taskType    AITaskType
+  provider    AIProvider
+  model       String
+  parameters  Json       @default("{}")
+  
+  createdBy String
+  creator   User   @relation(fields: [createdBy], references: [id])
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  tasks AITask[]
+  
+  @@map("ai_prompts")
+}
+
+model AITask {
+  id            String     @id @default(cuid())
+  type          AITaskType
+  status        AITaskStatus @default(PENDING)
+  input         Json
+  output        Json?
+  provider      AIProvider
+  model         String
+  usage         Json?
+  error         String?
+  executionTime Int?
+  completedAt   DateTime?
+  
+  promptId String?
+  prompt   AIPrompt? @relation(fields: [promptId], references: [id])
+  
+  createdBy String
+  creator   User   @relation(fields: [createdBy], references: [id])
+  
+  createdAt DateTime @default(now())
+  
+  // Relations
+  insights AIInsight[]
+  
+  @@map("ai_tasks")
+}
+
+model AIInsight {
+  id               String @id @default(cuid())
+  type             String
+  title            String
+  description      String
+  confidence       Float
+  impact           String
+  category         String
+  data             Json   @default("{}")
+  actionable       Boolean @default(false)
+  actions          Json    @default("[]")
+  relatedResources Json    @default("[]")
+  generatedBy      Json
+  expiresAt        DateTime?
+  
+  taskId String
+  task   AITask @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  
+  @@map("ai_insights")
+}
+
+model Embedding {
+  id           String       @id @default(cuid())
+  resourceId   String
+  resourceType ResourceType
+  content      String
+  vector       Float[]
+  metadata     Json         @default("{}")
+  
+  createdAt DateTime @default(now())
+  
+  @@index([resourceType, resourceId])
+  @@map("embeddings")
+}
+
+// API Management
+model ApiKey {
+  id         String    @id @default(cuid())
+  name       String
+  key        String    @unique
+  permissions String[]
+  rateLimit  Json      @default("{}")
+  lastUsed   DateTime?
+  expiresAt  DateTime?
+  isActive   Boolean   @default(true)
+  
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  createdBy String
+  creator   User   @relation(fields: [createdBy], references: [id])
+  
+  createdAt DateTime @default(now())
+  
+  @@map("api_keys")
+}
+
+// Enums
+enum OrganizationPlan {
+  FREE
+  BASIC
+  PROFESSIONAL
+  ENTERPRISE
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  ANALYST
+  VIEWER
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+  SUSPENDED
+}
+
+enum WorkflowStatus {
+  DRAFT
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+}
+
+enum ExecutionStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum ProcessStatus {
+  DISCOVERED
+  DOCUMENTED
+  OPTIMIZED
+  DEPRECATED
+}
+
+enum ProcessComplexity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum ResourceType {
+  WORKFLOW
+  PROCESS
+  DASHBOARD
+}
+
+enum AIProvider {
+  OPENAI
+  ANTHROPIC
+  GEMINI
+  CUSTOM
+}
+
+enum AITaskType {
+  PROCESS_DISCOVERY
+  WORKFLOW_OPTIMIZATION
+  DOCUMENT_ANALYSIS
+  PATTERN_RECOGNITION
+  ANOMALY_DETECTION
+  PREDICTIVE_ANALYSIS
+}
+
+enum AITaskStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+} 
