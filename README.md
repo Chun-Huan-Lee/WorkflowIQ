@@ -16,13 +16,39 @@
 
 ---
 
+## 🚧 Project Status
+
+> **⚠️ Early Development Stage**
+> 
+> WorkflowIQ is currently in **very early development** and many features are still work in progress. We're actively building and iterating on the core functionality. While the foundation is solid, expect frequent changes and improvements as we continue to develop the platform.
+
+### Current Development Focus
+
+- 🔨 **Core Infrastructure** - Setting up robust backend and frontend foundations
+- 🤖 **AI Integration** - Implementing process discovery and analysis capabilities  
+- 🎨 **User Interface** - Designing intuitive workflow visualization tools
+- 🔗 **Integrations** - Building connectors for popular business tools
+- 📚 **Documentation** - Creating comprehensive guides and examples
+
+### How You Can Help
+
+We're **thrilled to welcome contributors** at this exciting stage! Whether you're a developer, designer, product manager, or domain expert, there are many ways to get involved:
+
+- 🐛 **Report Issues** - Help us identify bugs and areas for improvement
+- 💡 **Suggest Features** - Share ideas for new capabilities and enhancements
+- 🛠️ **Contribute Code** - Submit pull requests for features, fixes, or optimizations
+- 📖 **Improve Documentation** - Help make our docs clearer and more comprehensive
+- 🧪 **Test & Feedback** - Try the platform and share your experience
+
+> **Join us in building the future of workflow intelligence!** Every contribution, no matter how small, helps shape WorkflowIQ into a powerful tool for organizations worldwide.
+
+
 ## 📋 Table of Contents
 
 - [Overview](#-overview)
   - [Problem Statement](#problem-statement)
   - [Solution](#solution)
   - [Key Features](#key-features)
-- [Project Status](#-project-status)
 - [Architecture](#️-architecture)
 - [Tech Stack](#️-tech-stack)
 - [Quick Start](#-quick-start)
@@ -84,33 +110,6 @@ WorkflowIQ is an intelligent workflow management platform that uses AI to automa
 - Predictive analytics for resource planning
 - Anomaly detection for process deviations
 - Custom KPI tracking with automated reporting
-
-## 🚧 Project Status
-
-> **⚠️ Early Development Stage**
-> 
-> WorkflowIQ is currently in **very early development** and many features are still work in progress. We're actively building and iterating on the core functionality. While the foundation is solid, expect frequent changes and improvements as we continue to develop the platform.
-
-### Current Development Focus
-
-- 🔨 **Core Infrastructure** - Setting up robust backend and frontend foundations
-- 🤖 **AI Integration** - Implementing process discovery and analysis capabilities  
-- 🎨 **User Interface** - Designing intuitive workflow visualization tools
-- 🔗 **Integrations** - Building connectors for popular business tools
-- 📚 **Documentation** - Creating comprehensive guides and examples
-
-### How You Can Help
-
-We're **thrilled to welcome contributors** at this exciting stage! Whether you're a developer, designer, product manager, or domain expert, there are many ways to get involved:
-
-- 🐛 **Report Issues** - Help us identify bugs and areas for improvement
-- 💡 **Suggest Features** - Share ideas for new capabilities and enhancements
-- 🛠️ **Contribute Code** - Submit pull requests for features, fixes, or optimizations
-- 📖 **Improve Documentation** - Help make our docs clearer and more comprehensive
-- 🧪 **Test & Feedback** - Try the platform and share your experience
-
-> **Join us in building the future of workflow intelligence!** Every contribution, no matter how small, helps shape WorkflowIQ into a powerful tool for organizations worldwide.
-
 
 ## 🏗️ Architecture
 
