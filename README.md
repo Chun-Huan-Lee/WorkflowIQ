@@ -402,7 +402,7 @@ MIT License - Copyright (c) 2025 Chun-Huan Lee
 
 ### Get Help & Support
 
-- 💬 **[GitHub Discussions](https://github.com/yourusername/workflowiq/discussions)** - Ask questions and get help (coming soon)
+- 💬 **[GitHub Discussions](https://github.com/yourusername/workflowiq/discussions)** - Ask questions and get help
 - 🐛 **[Issue Tracker](https://github.com/yourusername/workflowiq/issues)** - Report bugs or request features
 - 📧 **Email Support** - [vincent741516899@gmail.com](mailto:vincent741516899@gmail.com)
 - 📖 **Documentation** - [docs.workflowiq.com](https://docs.workflowiq.com) (coming soon)
