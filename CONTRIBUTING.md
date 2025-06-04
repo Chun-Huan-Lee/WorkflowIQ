@@ -431,7 +431,7 @@ Thank you for considering contributing to WorkflowIQ! Your involvement helps mak
 If you have any questions about contributing, please:
 
 - Check our [FAQ](docs/faq.md) (coming soon)
-- Ask in [GitHub Discussions](https://github.com/yourusername/workflowiq/discussions) (coming soon)
+- Ask in [GitHub Discussions](https://github.com/yourusername/workflowiq/discussions)
 - Join our [Discord community](https://discord.gg/workflowiq) (coming soon)
 - Email us at [vincent741516899@gmail.com.com](mailto:vincent741516899@gmail.com)
 
