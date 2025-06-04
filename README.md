@@ -376,7 +376,7 @@ We welcome contributions from the community! Please read our [Contributing Guide
 
 ### Development Guidelines
 
-- Follow our [Code Style Guide](docs/code-style.md)
+- Follow our [Code Style Guide](CONTRIBUTING.md)
 - Write tests for new features
 - Update documentation when needed
 - Follow conventional commit messages
