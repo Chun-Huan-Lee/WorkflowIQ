@@ -3,6 +3,8 @@
 
 <div align="center">
 
+<img src="/docs/img/demo-screen.png" alt="Project Banner" width="100%"  style="object-fit: cover; border-radius: 10px;" />
+
 [🚀 Quick Start](#-quick-start) · [📖 Documentation](#-documentation) · [🎯 Demo](#-demo) · [💬 Community](#-community)
 
 [![Version](https://img.shields.io/github/v/release/Chun-Huan-Lee/workflowiq?style=for-the-badge&logo=github)](https://github.com/Chun-Huan-Lee/workflowiq/releases)
