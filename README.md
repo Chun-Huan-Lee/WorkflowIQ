@@ -2,10 +2,9 @@
 
 ### 🌍 Choose Your Language / 選擇語言 / 选择语言
 
-[![English](https://img.shields.io/badge/English-blue?style=for-the-badge)](README.md)
-[![繁體中文](https://img.shields.io/badge/繁體中文-red?style=for-the-badge)](README-zh-TW.md)
-[![简体中文](https://img.shields.io/badge/简体中文-red?style=for-the-badge)](README-zh-CN.md)
-
+[![English](https://img.shields.io/badge/English-blue?style=for-the-badge)](../../README.md)
+[![繁體中文](https://img.shields.io/badge/繁體中文-red?style=for-the-badge)](../../docs/zh-TW/README-zh-TW.md)
+[![简体中文](https://img.shields.io/badge/简体中文-red?style=for-the-badge)](../../docs/zh-CN/README-zh-CN.md)
 
 </div>
 
