@@ -260,8 +260,12 @@ Ensure you have the following installed:
 
 2. **Initialize the database**
    ```bash
+   cd backend
+   .\load-env.ps1
+   
    npm run db:migrate
    npm run db:seed
+   npm run db:studio
    ```
 
 3. **Access the application**
