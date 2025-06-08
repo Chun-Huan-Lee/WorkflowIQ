@@ -1,4 +1,4 @@
-<div align="center">
+<!--<div align="center">
 
 ### 🌍 Choose Your Language / 選擇語言 / 选择语言
 
@@ -8,7 +8,7 @@
 
 </div>
 
----
+--->
 
 > [!CAUTION]
 This project is in an early stage of development. Some features may be incomplete or not functioning as intended.
