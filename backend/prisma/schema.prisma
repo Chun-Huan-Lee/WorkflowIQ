@@ -2,12 +2,15 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl"]
 }
+
+//postgresql://workflowiq:workflowiq_dev_password@localhost:5432/workflowiq
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL") 
 }
 
 // Organization and User Management
@@ -60,8 +63,10 @@ model User {
   workflowExecutions   WorkflowExecution[]
   collaboratorSessions Collaborator[]
   comments             Comment[]
-  aiTasks              AITask[]
-  createdApiKeys       ApiKey[]
+  aiTasks              AITask[]          @relation("AITaskCreator")
+  createdApiKeys       ApiKey[]          @relation("APIKeyCreator")
+  createdShareLinks    ShareLink[]       @relation("ShareLinkCreator")
+  createdAIPrompts     AIPrompt[]        @relation("AIPromptCreator")
   
   @@map("users")
 }
@@ -208,9 +213,9 @@ model CollaborationSession {
   comments      Comment[]
   
   // Resource relations (polymorphic)
-  workflow        Workflow?        @relation(fields: [resourceId], references: [id], onDelete: Cascade)
-  process         BusinessProcess? @relation(fields: [resourceId], references: [id], onDelete: Cascade)
-  dashboard       Dashboard?       @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  workflow        Workflow?        @relation(fields: [resourceId], references: [id], onDelete: Cascade, map: "collaboration_sessions_workflow_fkey")
+  process         BusinessProcess? @relation(fields: [resourceId], references: [id], onDelete: Cascade, map: "collaboration_sessions_process_fkey")
+  dashboard       Dashboard?       @relation(fields: [resourceId], references: [id], onDelete: Cascade, map: "collaboration_sessions_dashboard_fkey")
   
   @@map("collaboration_sessions")
 }
@@ -252,8 +257,8 @@ model Comment {
   updatedAt DateTime @updatedAt
   
   // Resource relations (polymorphic)
-  workflow  Workflow?        @relation(fields: [targetId], references: [id], onDelete: Cascade)
-  process   BusinessProcess? @relation(fields: [targetId], references: [id], onDelete: Cascade)
+  workflow  Workflow?        @relation(fields: [targetId], references: [id], onDelete: Cascade, map: "comments_workflow_fkey")
+  process   BusinessProcess? @relation(fields: [targetId], references: [id], onDelete: Cascade, map: "comments_process_fkey")
   
   @@map("comments")
 }
@@ -266,14 +271,14 @@ model ShareLink {
   lastAccessed DateTime?
   
   createdBy String
-  creator   User   @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  creator   User   @relation("ShareLinkCreator", fields: [createdBy], references: [id], onDelete: Cascade)
   
   createdAt DateTime @default(now())
   
   // Resource relations (polymorphic) - using JSON config to store resourceId and type
-  workflow  Workflow?        @relation(fields: [id], references: [id])
-  process   BusinessProcess? @relation(fields: [id], references: [id])
-  dashboard Dashboard?       @relation(fields: [id], references: [id])
+  workflow  Workflow?        @relation(fields: [id], references: [id], map: "share_links_workflow_fkey")
+  process   BusinessProcess? @relation(fields: [id], references: [id], map: "share_links_process_fkey")
+  dashboard Dashboard?       @relation(fields: [id], references: [id], map: "share_links_dashboard_fkey")
   
   @@map("share_links")
 }
@@ -291,7 +296,7 @@ model AIPrompt {
   parameters  Json       @default("{}")
   
   createdBy String
-  creator   User   @relation(fields: [createdBy], references: [id])
+  creator   User   @relation("AIPromptCreator", fields: [createdBy], references: [id])
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -319,7 +324,7 @@ model AITask {
   prompt   AIPrompt? @relation(fields: [promptId], references: [id])
   
   createdBy String
-  creator   User   @relation(fields: [createdBy], references: [id])
+  creator   User   @relation("AITaskCreator", fields: [createdBy], references: [id])
   
   createdAt DateTime @default(now())
   
@@ -381,7 +386,7 @@ model ApiKey {
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   
   createdBy String
-  creator   User   @relation(fields: [createdBy], references: [id])
+  creator   User   @relation("APIKeyCreator", fields: [createdBy], references: [id])
   
   createdAt DateTime @default(now())
   

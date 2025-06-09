@@ -1,13 +1,22 @@
 FROM node:18-alpine
 
+# Install OpenSSL for Prisma
+RUN apk add --no-cache openssl
+
 WORKDIR /app
 
-# Install dependencies
-COPY package*.json ./
-RUN npm ci
+# Copy shared package first
+COPY shared /app/shared
+WORKDIR /app/shared
+RUN npm install && npm run build
 
-# Copy source code
-COPY . .
+# Go back to app directory and copy backend files
+WORKDIR /app
+COPY backend/package*.json ./
+RUN npm install
+
+# Copy backend source code
+COPY backend .
 
 # Generate Prisma client
 RUN npx prisma generate

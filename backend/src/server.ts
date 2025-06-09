@@ -33,7 +33,7 @@ const server = createServer(app);
 // Initialize Socket.IO
 const io = new SocketIOServer(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin: process.env.CORS_ORIGIN || "http://localhost:3000",
     methods: ["GET", "POST"]
   }
 });
@@ -85,8 +85,12 @@ app.use(helmet({
 }));
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  origin: process.env.NODE_ENV === 'development' 
+    ? true  // Allow all origins in development
+    : process.env.CORS_ORIGIN || "http://localhost:3000",
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 app.use(compression());
@@ -156,7 +160,7 @@ app.use((err: any, req: any, res: any, next: any) => {
 // Setup WebSocket handlers
 setupWebSocketHandlers(io);
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 8000;
 
 // Graceful shutdown
 const gracefulShutdown = async () => {

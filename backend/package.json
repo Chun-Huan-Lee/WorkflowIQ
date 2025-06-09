@@ -16,6 +16,7 @@
     "db:studio": "prisma studio",
     "db:generate": "prisma generate",
     "db:reset": "prisma migrate reset",
+    "db:status": "tsx src/scripts/db-status.ts",
     "deploy": "npm run build && npm run db:migrate",
     "clean": "rm -rf dist"
   },

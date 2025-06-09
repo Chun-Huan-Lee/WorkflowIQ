@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { prisma } from '../utils/database';
 import { logger } from '../utils/logger';
 import { validateRequest } from '../middleware/validation';
-import { LoginSchema, RegisterSchema } from '@workflowiq/shared';
+// import { LoginSchema, RegisterSchema } from '@workflowiq/shared';
 
 const router = express.Router();
 
@@ -90,7 +90,7 @@ const generateTokens = (userId: string) => {
  *       400:
  *         description: Validation error or user already exists
  */
-router.post('/register', authLimiter, validateRequest({ body: RegisterSchema }), async (req: Request, res: Response) => {
+router.post('/register', authLimiter, validateRequest({ body: registerSchema }), async (req: Request, res: Response) => {
   try {
     const { email, password, firstName, lastName, organizationName } = req.body;
     
@@ -188,7 +188,7 @@ router.post('/register', authLimiter, validateRequest({ body: RegisterSchema }),
  *     summary: Login user
  *     tags: [Authentication]
  */
-router.post('/login', authLimiter, validateRequest({ body: LoginSchema }), async (req: Request, res: Response) => {
+router.post('/login', authLimiter, validateRequest({ body: loginSchema }), async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
     
