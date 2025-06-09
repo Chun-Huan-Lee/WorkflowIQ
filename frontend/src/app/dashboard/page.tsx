@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import ProtectedRoute from '../../components/ProtectedRoute';
+import { useAuth } from '../../hooks/useAuth';
+import toast from 'react-hot-toast';
 import { 
   Plus, 
   Search, 
@@ -17,7 +20,8 @@ import {
   Brain,
   Settings,
   Bell,
-  User
+  User,
+  LogOut
 } from 'lucide-react';
 
 // Mock data for demonstration
@@ -65,6 +69,17 @@ export default function DashboardPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [workflows, setWorkflows] = useState(mockWorkflows);
+  const { user, logout } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      toast.success('Logged out successfully');
+    } catch (error) {
+      console.error('Logout failed:', error);
+      toast.error('Logout failed');
+    }
+  };
 
   const filteredWorkflows = workflows.filter(workflow => {
     const matchesSearch = workflow.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -82,7 +97,8 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <ProtectedRoute>
+      <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="flex items-center justify-between">
@@ -108,8 +124,23 @@ export default function DashboardPage() {
             <button className="p-2 text-gray-600 hover:text-gray-900">
               <Settings className="w-5 h-5" />
             </button>
-            <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-              <User className="w-5 h-5 text-gray-600" />
+            <div className="flex items-center space-x-3">
+              <div className="text-right">
+                <p className="text-sm font-medium text-gray-900">
+                  {user?.firstName} {user?.lastName}
+                </p>
+                <p className="text-xs text-gray-500">{user?.email}</p>
+              </div>
+              <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                <User className="w-5 h-5 text-gray-600" />
+              </div>
+              <button 
+                onClick={handleLogout}
+                className="p-2 text-gray-600 hover:text-red-600 transition-colors"
+                title="Logout"
+              >
+                <LogOut className="w-5 h-5" />
+              </button>
             </div>
           </div>
         </div>
@@ -339,5 +370,6 @@ export default function DashboardPage() {
         </main>
       </div>
     </div>
+    </ProtectedRoute>
   );
 } 
