@@ -1,0 +1,1 @@
+Write-Output "DATABASE_URL=postgresql://workflowiq:workflowiq_dev_password@localhost:5432/workflowiq" | Out-File -FilePath ".env" -Encoding UTF8

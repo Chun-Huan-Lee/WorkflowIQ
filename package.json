@@ -40,12 +40,12 @@
     "postinstall": "npm run build:shared"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
+    "concurrently": "^8.2.2",
     "eslint": "^8.57.0",
-    "typescript": "^5.3.3",
-    "prettier": "^3.2.5"
+    "prettier": "^3.2.5",
+    "typescript": "^5.3.3"
   },
   "engines": {
     "node": ">=18.0.0",
@@ -66,5 +66,8 @@
     "real-time"
   ],
   "author": "Your Name <your.email@example.com>",
-  "license": "MIT"
-} 
+  "license": "MIT",
+  "dependencies": {
+    "@pinecone-database/pinecone": "^1.1.3"
+  }
+}

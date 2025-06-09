@@ -39,8 +39,8 @@ services:
   # Backend API
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: ./backend/Dockerfile.dev
     container_name: workflowiq-backend
     restart: unless-stopped
     environment:
@@ -54,7 +54,9 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/app
+      - ./shared:/app/shared
       - /app/node_modules
+      - /app/shared/node_modules
     depends_on:
       postgres:
         condition: service_healthy
@@ -69,8 +71,8 @@ services:
   # AI Services (Python FastAPI)
   ai-services:
     build:
-      context: ./ai-services
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: ./ai-services/Dockerfile.dev
     container_name: workflowiq-ai
     restart: unless-stopped
     environment:
@@ -95,8 +97,8 @@ services:
   # Frontend (Next.js) - Only for production builds
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: ./frontend/Dockerfile.dev
     container_name: workflowiq-frontend
     restart: unless-stopped
     environment:
@@ -107,7 +109,9 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend:/app
+      - ./shared:/app/shared
       - /app/node_modules
+      - /app/shared/node_modules
       - /app/.next
     depends_on:
       backend:
