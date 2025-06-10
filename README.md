@@ -225,6 +225,12 @@ Ensure you have the following installed:
 2. **Install dependencies**
    ```bash
    npm install
+
+   cd .\frontend\
+   npm install
+
+   cd .\backend\
+   npm install
    ```
 
 3. **Set up environment variables**
@@ -260,7 +266,7 @@ Ensure you have the following installed:
 
 2. **Initialize the database**
    ```bash
-   cd backend
+   cd .\backend\
    .\load-env.ps1
    
    npm run db:migrate
