@@ -57,7 +57,7 @@ We're **thrilled to welcome contributors** at this exciting stage! Whether you'r
 - 📖 **Improve Documentation** - Help make our docs clearer and more comprehensive
 - 🧪 **Test & Feedback** - Try the platform and share your experience
 
-> **Join us in building the future of workflow intelligence!** Every contribution, no matter how small, helps shape WorkflowIQ into a powerful tool for organizations worldwide. read our [Contributing Guidelines](CONTRIBUTING.md) to know more.
+> **Join us in building the future of workflow intelligence!** Every contribution, no matter how small, helps shape WorkflowIQ into a powerful tool for organizations worldwide. Read our [Contributing Guidelines](CONTRIBUTING.md) to know more.
 
 ---
 
